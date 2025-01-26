@@ -10,6 +10,33 @@ router.route('/').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/:id').get((req,res) => {
+    Product.findById(req.params.id)
+        .then(products => res.json(products))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/:id').delete((req,res) => {
+    Product.findByIdAndDelete(req.params.id)
+        .then(() => res.json('Product deleted.'))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/update/:id').post((req,res) =>{
+    Product.findById(req.params.id)
+        .then(products => {
+            products.productName = req.body.productName;
+            products.price = req.body.price;
+            products.photo_url = req.body.photo_url;
+
+            products.save()
+            .then(() => res.json('Product updated!'))
+            .catch(err => res.status(400).json('Error: ' + err));
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+        
+});
+
 // POST route to add a new product
 router.route('/add').post((req, res) => {
     const { productName, price, photo_url } = req.body;
