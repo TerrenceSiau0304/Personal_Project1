@@ -3,6 +3,9 @@ import cors from 'cors';
 import mongoose from 'mongoose'; 
 import dotenv from 'dotenv';
 
+import productRouter from "./routes/product.js";
+import userRouter from "./routes/user.js";
+
 dotenv.config();
 
 const app = express();
@@ -22,6 +25,10 @@ mongoose
   .catch((error) => {
     console.error("MongoDB connection error:", error.message);
   });
+
+
+app.use('/product', productRouter);
+app.use('/user', userRouter);
 
 // Start Server
 app.listen(port, () => {
