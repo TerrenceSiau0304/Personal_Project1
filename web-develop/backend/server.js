@@ -1,23 +1,29 @@
 import express from 'express';
 import cors from 'cors';
-import moongoose from 'mongoose';
+import mongoose from 'mongoose'; 
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// MongoDB Connection
 const uri = process.env.ATLAS_URI;
-moongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true }
-);
-const connnection = moongoose.connection;
-connnection.once('open', () => {
+mongoose
+  .connect(uri) 
+  .then(() => {
     console.log("MongoDB database connection established successfully");
-})
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error.message);
+  });
 
-app.listen(port, () =>{
-    console.log(`Server is running on port: ${port}`);
-}); 
+// Start Server
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
